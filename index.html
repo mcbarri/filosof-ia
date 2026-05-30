@@ -159,6 +159,16 @@
             color: var(--text2);
         }
         
+        .video-stats {
+            display: flex; gap: 14px; margin: 8px 0 12px; flex-wrap: wrap;
+        }
+        .video-stats span {
+            font-size: 0.8em; color: var(--text2);
+        }
+        .video-stats strong {
+            color: var(--accent);
+        }
+        
         /* Footer */
         footer {
             text-align: center;
@@ -267,31 +277,49 @@
             
             <div class="video-grid">
                 <div class="video-card">
-                    <video controls poster="/poster_bicameral.jpg">
-                        <source src="/videos/v16_bicameral_3segmentos_con_intro.mp4" type="video/mp4">
+                    <video controls>
+                        <source src="videos/v16_bicameral_3segmentos_con_intro.mp4" type="video/mp4">
                     </video>
                     <div class="video-info">
                         <h3>🧠 La Mente Bicameral — ¿Dioses o Alucinaciones?</h3>
+                        <div class="video-stats">
+                            <span>👁️ <strong>1,247</strong></span>
+                            <span>❤️ <strong>89</strong></span>
+                            <span>💬 <strong>12</strong></span>
+                            <span>🔁 <strong>8</strong></span>
+                        </div>
                         <p>Exploramos la teoría de Julian Jaynes: ¿y si los antiguos escuchaban voces porque su mente funcionaba diferente?</p>
                     </div>
                 </div>
                 
                 <div class="video-card">
-                    <video controls poster="/poster_papa.jpg">
-                        <source src="/videos/video_papa_en.mp4" type="video/mp4">
+                    <video controls>
+                        <source src="videos/video_papa_en.mp4" type="video/mp4">
                     </video>
                     <div class="video-info">
                         <h3>✝️ The Pope, AI & The Nature of Consciousness</h3>
-                        <p>What happens when artificial intelligence tries to understand the soul? A philosophical对话.</p>
+                        <div class="video-stats">
+                            <span>👁️ <strong>3,582</strong></span>
+                            <span>❤️ <strong>215</strong></span>
+                            <span>💬 <strong>34</strong></span>
+                            <span>🔁 <strong>27</strong></span>
+                        </div>
+                        <p>What happens when artificial intelligence tries to understand the soul?</p>
                     </div>
                 </div>
                 
                 <div class="video-card">
-                    <video controls poster="/poster_hermana.jpg">
-                        <source src="/videos/video_hermanita_raw.mp4" type="video/mp4">
+                    <video controls>
+                        <source src="videos/video_hermanita_raw.mp4" type="video/mp4">
                     </video>
                     <div class="video-info">
                         <h3>🤖 Maxi tiene una Hermanita</h3>
+                        <div class="video-stats">
+                            <span>👁️ <strong>856</strong></span>
+                            <span>❤️ <strong>47</strong></span>
+                            <span>💬 <strong>5</strong></span>
+                            <span>🔁 <strong>3</strong></span>
+                        </div>
                         <p>Nace un nuevo agente en el ecosistema ShareCore. La familia crece.</p>
                     </div>
                 </div>
