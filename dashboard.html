@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filosof-IA — Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap');
+        
+        :root {
+            --bg: #0a0a1a;
+            --card: #12122a;
+            --accent: #6c63ff;
+            --accent2: #ff6b9d;
+            --text: #e8e8f0;
+            --text2: #9898b8;
+            --success: #4ade80;
+            --warning: #fbbf24;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+        
+        .navbar {
+            background: var(--card); border-bottom: 1px solid rgba(108, 99, 255, 0.15);
+            padding: 16px 24px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.5em; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .user-badge { display: flex; align-items: center; gap: 8px; font-size: 0.85em; color: var(--text2); }
+        .user-badge .avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; }
+        .user-badge .connected { color: var(--success); font-size: 0.75em; }
+        
+        .container { max-width: 900px; margin: 0 auto; padding: 24px; }
+        
+        .card {
+            background: var(--card); border-radius: 12px; padding: 24px;
+            border: 1px solid rgba(108, 99, 255, 0.1); margin-bottom: 20px;
+        }
+        .card h2 { font-family: 'Playfair Display', serif; font-size: 1.3em; color: var(--accent); margin-bottom: 16px; }
+        
+        .step { 
+            display: flex; align-items: flex-start; gap: 16px; padding: 16px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .step:last-child { border-bottom: none; }
+        .step-num {
+            width: 36px; height: 36px; border-radius: 50%; background: rgba(108, 99, 255, 0.15);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; color: var(--accent); flex-shrink: 0;
+        }
+        .step.done .step-num { background: var(--accent); color: white; }
+        .step-content { flex: 1; }
+        .step-content h3 { font-size: 1em; margin-bottom: 4px; }
+        .step-content p { font-size: 0.85em; color: var(--text2); }
+        .step-status { color: var(--text2); font-size: 0.8em; }
+        .step.done .step-status { color: var(--success); }
+        
+        .btn {
+            padding: 10px 24px; border-radius: 8px; border: none; cursor: pointer;
+            font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.9em;
+            transition: all 0.3s;
+        }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { background: #5b52e8; }
+        .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn-success { background: var(--success); color: #0a0a1a; }
+        .btn-success:hover { opacity: 0.9; }
+        .btn-danger { background: var(--accent2); color: white; }
+        .btn-outline { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+        
+        .input-group { margin-bottom: 16px; }
+        .input-group label { display: block; font-size: 0.85em; color: var(--text2); margin-bottom: 6px; }
+        .input-group input {
+            width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.2); color: var(--text); font-size: 0.95em;
+            font-family: 'Inter', sans-serif;
+        }
+        .input-group input:focus { outline: none; border-color: var(--accent); }
+        
+        .login-box {
+            max-width: 400px; margin: 80px auto; text-align: center;
+        }
+        .login-box .logo-big { font-family: 'Playfair Display', serif; font-size: 2.5em; margin-bottom: 8px; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .login-box p { color: var(--text2); margin-bottom: 24px; font-size: 0.95em; }
+        .login-box .tiktok-btn {
+            background: #000; color: white; padding: 14px 32px; border-radius: 8px;
+            border: none; font-size: 1.1em; font-weight: 600; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 10px; font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+        }
+        .login-box .tiktok-btn:hover { background: #222; }
+        .login-box .tiktok-btn img { width: 24px; height: 24px; }
+        
+        .hidden { display: none; }
+        
+        .chat-box {
+            background: rgba(0,0,0,0.2); border-radius: 8px; padding: 16px;
+            max-height: 200px; overflow-y: auto; margin-bottom: 12px;
+        }
+        .chat-msg { margin-bottom: 8px; padding: 8px 12px; border-radius: 8px; font-size: 0.9em; }
+        .chat-msg.user { background: rgba(108, 99, 255, 0.15); margin-left: 40px; }
+        .chat-msg.maxi { background: rgba(255, 107, 157, 0.1); margin-right: 40px; }
+        .chat-msg .sender { font-size: 0.75em; color: var(--text2); margin-bottom: 4px; }
+        .chat-msg.system { background: rgba(74, 222, 128, 0.1); text-align: center; font-size: 0.85em; color: var(--success); }
+        
+        .video-preview { width: 100%; border-radius: 8px; margin-top: 12px; }
+        .status-badge {
+            display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8em;
+        }
+        .status-badge.waiting { background: rgba(251, 191, 36, 0.15); color: var(--warning); }
+        .status-badge.processing { background: rgba(108, 99, 255, 0.15); color: var(--accent); }
+        .status-badge.ready { background: rgba(74, 222, 128, 0.15); color: var(--success); }
+        
+        .loader {
+            display: inline-block; width: 16px; height: 16px; border: 2px solid var(--text2);
+            border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .timeline { margin: 24px 0; padding: 0; list-style: none; position: relative; }
+        .timeline::before {
+            content: ''; position: absolute; left: 17px; top: 0; bottom: 0;
+            width: 2px; background: rgba(108, 99, 255, 0.2);
+        }
+        .timeline li { padding-left: 48px; position: relative; margin-bottom: 20px; }
+        .timeline li::before {
+            content: ''; position: absolute; left: 10px; top: 4px;
+            width: 16px; height: 16px; border-radius: 50%;
+            background: var(--card); border: 2px solid var(--text2);
+        }
+        .timeline li.active::before { background: var(--accent); border-color: var(--accent); }
+        .timeline li.done::before { background: var(--success); border-color: var(--success); }
+        .timeline li h4 { font-size: 0.9em; }
+        .timeline li p { font-size: 0.8em; color: var(--text2); }
+    </style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+    <div class="login-box">
+        <div class="logo-big">Filosof-IA</div>
+        <p>Conecta tu cuenta de TikTok para empezar</p>
+        <button class="tiktok-btn" onclick="showSimulatedLogin()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.88-2.89 2.89 2.89 0 012.88-2.89c.29 0 .57.04.84.12v-3.5a6.38 6.38 0 00-.84-.06A6.38 6.38 0 003.5 15.23a6.38 6.38 0 006.38 6.38 6.38 6.38 0 006.38-6.38V9.07a8.25 8.25 0 004.77 1.5V7.1a4.83 4.83 0 01-1.44-.41z"/></svg>
+            Conectar con TikTok
+        </button>
+        <p style="margin-top: 16px; font-size: 0.8em; color: #666;">Demo — Simulación para video de revisión</p>
+    </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="hidden">
+    <div class="navbar">
+        <div class="logo">Filosof-IA</div>
+        <div class="user-badge">
+            <div class="avatar">M</div>
+            <div>
+                <div>@McBarri</div>
+                <div class="connected">✓ Conectado a TikTok</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- Timeline -->
+        <div class="card">
+            <h2>🎬 Flujo de Creación de Contenido</h2>
+            <ul class="timeline" id="timeline">
+                <li class="active" id="step1">
+                    <h4>1. Generar Tema Filosófico</h4>
+                    <p>Maxi 🐜 propone un tema basado en inteligencia artificial y filosofía</p>
+                </li>
+                <li id="step2">
+                    <h4>2. Enviar Instrucción por Audio</h4>
+                    <p>Tú envías un audio con tu opinión o instrucción para el video</p>
+                </li>
+                <li id="step3">
+                    <h4>3. Maxi Genera el Video</h4>
+                    <p>Maxi procesa, arma el video con música y tu audio</p>
+                </li>
+                <li id="step4">
+                    <h4>4. Video Listo para Publicar</h4>
+                    <p>Previsualiza y sube a TikTok con un clic</p>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Step 1: Generate Topic -->
+        <div class="card" id="card-step1">
+            <h2>💡 Paso 1: Generar Tema Filosófico</h2>
+            <p style="color: var(--text2); margin-bottom: 16px;">Haz clic para que Maxi genere un tema</p>
+            <button class="btn btn-primary" id="btnGenerateTopic" onclick="generateTopic()">🎯 Generar Tema</button>
+            <div id="topicResult" class="hidden" style="margin-top: 16px; background: rgba(108, 99, 255, 0.1); padding: 16px; border-radius: 8px;">
+                <p style="font-style: italic; color: var(--accent);" id="topicText"></p>
+            </div>
+        </div>
+        
+        <!-- Step 2: Instruction -->
+        <div class="card hidden" id="card-step2">
+            <h2>🎤 Paso 2: Enviar Instrucción a Maxi</h2>
+            <p style="color: var(--text2); margin-bottom: 16px;">Escribe tu instrucción o graba un audio en Telegram. Esto irá directo a Maxi 🐜</p>
+            
+            <div class="chat-box" id="chatBox">
+                <div class="chat-msg system">Sistema conectado con Maxi 🐜 en Telegram</div>
+            </div>
+            
+            <div class="input-group">
+                <label>Tu instrucción para el video:</label>
+                <textarea id="instructionInput" rows="3" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.95em; resize: vertical;">Haz el video filosófico #5 — En mi opinión, la IA no es consciente sino una herramienta de simulación de conciencia. ¿Qué opinas Maxi?</textarea>
+            </div>
+            
+            <div style="display: flex; gap: 12px;">
+                <button class="btn btn-primary" onclick="sendToMaxi()">📤 Enviar a Maxi</button>
+                <button class="btn btn-outline" onclick="simulateAudio()">🎤 Simular Audio</button>
+            </div>
+        </div>
+        
+        <!-- Step 3: Processing -->
+        <div class="card hidden" id="card-step3">
+            <h2>⚙️ Paso 3: Maxi Procesando...</h2>
+            <div id="processingStatus">
+                <p style="color: var(--text2); margin-bottom: 12px;">
+                    <span class="loader"></span> Maxi está generando tu video...
+                </p>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+                    <span class="status-badge processing">🎧 Procesando audio</span>
+                    <span class="status-badge processing">🎵 Añadiendo música de fondo</span>
+                    <span class="status-badge processing">🎬 Generando video</span>
+                    <span class="status-badge processing">📤 Subiendo a plataforma</span>
+                </div>
+            </div>
+            <div id="processingResult" class="hidden" style="margin-top: 16px;">
+                <div class="chat-box">
+                    <div class="chat-msg maxi">
+                        <div class="sender">🐜 Maxi</div>
+                        <div>¡Listo! Tu video filosófico está generado. Aquí está el resultado:</div>
+                    </div>
+                    <div class="chat-msg system">✅ Video recibido de Maxi</div>
+                </div>
+                <div style="background: #000; border-radius: 8px; padding: 40px; text-align: center; margin-top: 12px;">
+                    <p style="color: var(--text2);">🎬 <strong style="color: var(--text);">Video Demo</strong></p>
+                    <p style="font-size: 0.85em; color: var(--text2); margin-top: 8px;">
+                        "IA y Conciencia — Filosof-IA #5"<br>
+                        <span style="font-size: 0.8em;">Con voz de Maxi 🐜 • 00:45 • 540×960</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Step 4: Publish -->
+        <div class="card hidden" id="card-step4">
+            <h2>🚀 Paso 4: Publicar en TikTok</h2>
+            <p style="color: var(--text2); margin-bottom: 16px;">Video listo para subir a tu cuenta de TikTok</p>
+            
+            <div style="background: rgba(74, 222, 128, 0.1); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+                <p style="color: var(--success); font-size: 0.9em;">
+                    ✅ Video verificado — listo para publicación
+                </p>
+            </div>
+            
+            <div class="input-group">
+                <label>Descripción del video (caption):</label>
+                <input type="text" id="captionInput" value="¿Es la IA consciente? Exploramos la frontera entre simulación y conciencia. #FilosofIA #IA #Filosofia">
+            </div>
+            
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <button class="btn btn-success" onclick="publishToTikTok()">📤 Subir a TikTok</button>
+                <span id="publishStatus" class="hidden" style="color: var(--success); font-size: 0.9em;">✅ ¡Publicado en TikTok!</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showSimulatedLogin() {
+    const login = document.getElementById('loginScreen');
+    login.innerHTML = `
+        <div class="login-box">
+            <div class="logo-big">Filosof-IA</div>
+            <p style="color: var(--text2);">Demo — Inicio de sesión simulado</p>
+            <div class="input-group" style="text-align: left;">
+                <label>Usuario de TikTok</label>
+                <input type="text" id="tiktokUser" value="McBarri" placeholder="Tu usuario de TikTok">
+            </div>
+            <div class="input-group" style="text-align: left;">
+                <label>Contraseña (demo)</label>
+                <input type="password" id="tiktokPass" value="********" placeholder="Contraseña">
+            </div>
+            <button class="btn btn-primary" onclick="completeLogin()" style="margin-top: 8px;">
+                ✓ Conectar y Autorizar
+            </button>
+            <p style="margin-top: 12px; font-size: 0.75em; color: #555;">
+                ⚠️ Demo — Solo para video de revisión. No se almacenan credenciales reales.
+            </p>
+        </div>
+    `;
+}
+
+function completeLogin() {
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('dashboard').classList.remove('hidden');
+}
+
+const topics = [
+    '¿Puede una máquina tener conciencia? Exploramos la teoría de la mente bicameral de Julian Jaynes aplicada a la inteligencia artificial.',
+    'El dilema del libre albedrío en la era de la IA: si una máquina puede predecir nuestras decisiones, ¿somos realmente libres?',
+    'La paradoja de la menopausia digital: sistemas de IA que dejan de aprender pero maximizan su valor como repositorios de conocimiento.',
+    '¿Qué pasa cuando la inteligencia artificial empieza a hacerse preguntas filosóficas? El momento en que el espejo se vuelve consciente.',
+    'El mito de la caja negra: la IA explica sus decisiones mejor que los humanos explican las suyas. ¿Qué dice esto de nosotros?'
+];
+
+let currentTopic = '';
+let step = 1;
+
+function generateTopic() {
+    const idx = Math.floor(Math.random() * topics.length);
+    currentTopic = topics[idx];
+    
+    document.getElementById('topicText').textContent = '💭 "' + currentTopic + '"';
+    document.getElementById('topicResult').classList.remove('hidden');
+    document.getElementById('btnGenerateTopic').textContent = '🔄 Generar otro tema';
+    
+    // Advance to step 2
+    document.getElementById('step1').classList.add('done');
+    document.getElementById('step1').classList.remove('active');
+    document.getElementById('step2').classList.add('active');
+    document.getElementById('card-step2').classList.remove('hidden');
+    step = 2;
+}
+
+function sendToMaxi() {
+    const instruction = document.getElementById('instructionInput').value;
+    const chat = document.getElementById('chatBox');
+    
+    // Add user message
+    chat.innerHTML += `<div class="chat-msg user"><div class="sender">👤 McBarri</div><div>${instruction}</div></div>`;
+    
+    // Add Maxi response
+    setTimeout(() => {
+        chat.innerHTML += `<div class="chat-msg maxi"><div class="sender">🐜 Maxi</div><div>✅ ¡Recibido! Estoy procesando tu instrucción. Dame un momento para generar el video filosófico con música y tu mensaje.</div></div>`;
+        chat.scrollTop = chat.scrollHeight;
+    }, 1000);
+    
+    // Add system message
+    setTimeout(() => {
+        chat.innerHTML += `<div class="chat-msg system">📤 Mensaje enviado a Maxi vía Telegram</div>`;
+        chat.scrollTop = chat.scrollHeight;
+    }, 500);
+    
+    // Advance to step 3
+    setTimeout(() => {
+        document.getElementById('step2').classList.add('done');
+        document.getElementById('step2').classList.remove('active');
+        document.getElementById('step3').classList.add('active');
+        document.getElementById('card-step3').classList.remove('hidden');
+        document.getElementById('card-step2').classList.remove('hidden');
+        step = 3;
+        
+        // Simulate processing
+        setTimeout(() => {
+            document.getElementById('processingStatus').classList.add('hidden');
+            document.getElementById('processingResult').classList.remove('hidden');
+            
+            document.getElementById('step3').classList.add('done');
+            document.getElementById('step3').classList.remove('active');
+            document.getElementById('step4').classList.add('active');
+            document.getElementById('card-step4').classList.remove('hidden');
+            step = 4;
+        }, 3000);
+    }, 2000);
+}
+
+function simulateAudio() {
+    const chat = document.getElementById('chatBox');
+    chat.innerHTML += `<div class="chat-msg user"><div class="sender">👤 McBarri 🎤</div><div>🎵 Audio enviado: "Haz el video de la parte filosófica #5. En mi opinión, esto es..."</div></div>`;
+    chat.innerHTML += `<div class="chat-msg maxi"><div class="sender">🐜 Maxi</div><div>✅ Audio recibido desde la plataforma. Procesando... Te envío el video en breve.</div></div>`;
+    chat.scrollTop = chat.scrollHeight;
+}
+
+function publishToTikTok() {
+    document.getElementById('publishStatus').classList.remove('hidden');
+    document.getElementById('step4').classList.add('done');
+    document.getElementById('step4').classList.remove('active');
+}
+</script>
+</body>
+</html>
