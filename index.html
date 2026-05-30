@@ -204,12 +204,35 @@
             .video-grid { grid-template-columns: 1fr; }
             header { padding: 40px 0 20px; }
         }
+        
+        /* Navbar for index */
+        .top-nav {
+            display: flex; justify-content: flex-end; padding: 20px 0; align-items: center;
+        }
+        .btn-ingresar {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 28px; border-radius: 10px; border: 1px solid var(--accent);
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.1), rgba(255, 107, 157, 0.1));
+            color: var(--accent); font-family: 'Inter', sans-serif; font-size: 0.95em;
+            font-weight: 600; cursor: pointer; transition: all 0.3s;
+            text-decoration: none;
+        }
+        .btn-ingresar:hover {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white; box-shadow: 0 4px 20px rgba(108, 99, 255, 0.3);
+        }
     </style>
 </head>
 <body>
     <div class="stars"></div>
     
     <div class="container">
+        <div class="top-nav">
+            <a href="dashboard.html" class="btn-ingresar">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                Ingresar
+            </a>
+        </div>
         <header>
             <div class="logo">Filosof-IA</div>
             <div class="subtitle">Donde la inteligencia artificial encuentra la filosofía</div>

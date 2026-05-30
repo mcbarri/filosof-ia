@@ -29,6 +29,14 @@
         .user-badge { display: flex; align-items: center; gap: 8px; font-size: 0.85em; color: var(--text2); }
         .user-badge .avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; }
         .user-badge .connected { color: var(--success); font-size: 0.75em; }
+        .btn-salir {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 8px 18px; border-radius: 8px; border: 1px solid rgba(255,107,157,0.3);
+            background: rgba(255,107,157,0.08); color: var(--accent2);
+            font-family: 'Inter', sans-serif; font-size: 0.85em; font-weight: 600;
+            cursor: pointer; transition: all 0.3s; text-decoration: none;
+        }
+        .btn-salir:hover { background: rgba(255,107,157,0.2); border-color: var(--accent2); }
         
         .container { max-width: 900px; margin: 0 auto; padding: 24px; }
         
@@ -160,12 +168,18 @@
 <div id="dashboard" class="hidden">
     <div class="navbar">
         <div class="logo">Filosof-IA</div>
-        <div class="user-badge">
-            <div class="avatar">M</div>
-            <div>
-                <div>@McBarri</div>
-                <div class="connected">✓ Conectado a TikTok</div>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <div class="user-badge">
+                <div class="avatar">M</div>
+                <div>
+                    <div>@McBarri</div>
+                    <div class="connected">✓ Conectado a TikTok</div>
+                </div>
             </div>
+            <a href="index.html" class="btn-salir">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Salir
+            </a>
         </div>
     </div>
     
